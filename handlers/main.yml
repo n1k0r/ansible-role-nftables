@@ -1,0 +1,4 @@
+- name: Reload nftables configuration
+  command:
+    cmd: /usr/sbin/nft -f /etc/nftables.conf
+  become: yes

@@ -1,0 +1,26 @@
+- name: Install nftables
+  package:
+    name: nftables
+    state: present
+
+- name: Replace tables with tables-nft
+  alternatives:
+    name: "{{ item.0 }}"
+    path: "{{ item.1 }}"
+  loop:
+    - [ iptables, /usr/sbin/iptables-nft ]
+    - [ ip6tables, /usr/sbin/ip6tables-nft ]
+    - [ arptables, /usr/sbin/arptables-nft ]
+    - [ ebtables, /usr/sbin/ebtables-nft ]
+
+- name: Enable nftables service
+  service:
+    name: nftables
+    state: started
+    enabled: yes
+
+- name: Template nftables configuration
+  template:
+    src: "{{ nftables_config }}"
+    dest: /etc/nftables.conf
+  notify: Reload nftables configuration

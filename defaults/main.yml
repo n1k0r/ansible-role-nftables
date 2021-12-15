@@ -1,0 +1,1 @@
+nftables_config: default_nftables.conf.j2

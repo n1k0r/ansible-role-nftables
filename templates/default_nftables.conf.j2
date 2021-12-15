@@ -1,0 +1,20 @@
+#!/usr/sbin/nft -f
+
+table inet firewall
+delete table inet firewall
+
+table inet firewall {
+    chain inbound {
+        type filter hook prerouting priority dstnat - 1
+        policy drop
+
+        iif lo accept
+        ct state { established, related } accept
+
+        meta l4proto { icmp, icmpv6 } accept
+        tcp dport { ssh, http, https } accept
+
+        iifname "docker*" accept
+        iifname "br-*" accept
+    }
+}
